@@ -41,8 +41,13 @@ button:focus-visible {
   outline-offset: 2px;
 }
 
+/* The header is centered: the name in the middle, the intro and links under it. */
+header {
+  text-align: center;
+}
+
 h1 {
-  margin: 48px 0 12px;
+  margin: 48px 0 16px;
   font-size: clamp(32px, 7vw, 44px);
   font-weight: 700;
   line-height: 1.15;
@@ -83,6 +88,8 @@ sup {
 }
 
 .lead {
+  max-width: 640px;
+  margin-inline: auto;
   color: var(--text-muted);
   font-size: 18px;
 }
@@ -92,7 +99,7 @@ sup {
   font-size: 14px;
 }
 
-/* --- Theme button: shows the current choice (system, light, dark) --------------------------- */
+/* --- Theme button: light or dark, showing the theme it switches to ------------------------ */
 
 .theme-button {
   display: grid;
@@ -127,9 +134,8 @@ sup {
   stroke-linejoin: round;
 }
 
-.theme-button[data-choice="system"] .icon-system,
-.theme-button[data-choice="light"] .icon-light,
-.theme-button[data-choice="dark"] .icon-dark {
+.theme-button[data-next="light"] .icon-light,
+.theme-button[data-next="dark"] .icon-dark {
   display: block;
 }
 
@@ -138,6 +144,7 @@ sup {
 .links {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 8px;
   margin-top: 28px;
 }
@@ -148,8 +155,10 @@ sup {
   border-radius: 8px;
   background: var(--bg-raised);
   color: var(--text);
+  font: inherit;
   font-weight: 500;
   text-decoration: none;
+  cursor: pointer;
   transition:
     background-color 0.12s,
     border-color 0.12s;
@@ -173,6 +182,118 @@ sup {
   color: var(--text-muted);
   font-size: 14px;
   font-weight: 400;
+}
+
+/* --- Email card: opened by the Email button (a popover, centered in the window) ------------- */
+
+.email-card {
+  width: min(400px, calc(100vw - 32px));
+  padding: 16px 20px 20px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--bg-raised);
+  color: var(--text);
+  box-shadow: 0 12px 32px var(--shadow);
+  text-align: left;
+}
+
+.email-card::backdrop {
+  background: var(--shadow);
+}
+
+.email-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.email-card h2 {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.email-card .close {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  margin-right: -6px;
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.email-card .close:hover {
+  background: var(--border-muted);
+  color: var(--text);
+}
+
+.email-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 8px 8px 14px;
+  border: 1px solid var(--border-muted);
+  border-radius: 10px;
+  background: var(--bg-sunken);
+}
+
+.email-address {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  color: var(--text);
+  font-size: 17px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.email-address:hover {
+  text-decoration: underline;
+}
+
+.email-card .copy {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+}
+
+.email-card .copy.done {
+  border-color: var(--success);
+  color: var(--success);
+}
+
+.email-card .muted {
+  margin: 12px 0 0;
+}
+
+.email-card svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.email-card .copy .icon-done,
+.email-card .copy.done .icon-copy {
+  display: none;
+}
+
+.email-card .copy.done .icon-done {
+  display: block;
 }
 
 /* --- Projects ------------------------------------------------------------------------------- */

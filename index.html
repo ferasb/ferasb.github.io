@@ -19,14 +19,14 @@
     <link rel="preload" href="fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="stylesheet" href="theme.css" />
     <link rel="stylesheet" href="style.css" />
-    <!-- Not deferred: it applies a chosen theme before the page first paints. -->
+    <!-- Not deferred: it applies a picked theme before the page first paints. -->
     <script src="theme.js"></script>
+    <script src="email.js" defer></script>
     <title>Feras Bisharat</title>
   </head>
   <body>
-    <!-- The same button as Bloch Sphere's: shows the current theme, and steps through system, light and dark (theme.js). -->
-    <button type="button" id="theme-button" class="theme-button" data-choice="system" title="Theme" aria-label="Theme">
-      <svg class="icon-system" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2" /><path d="M8 20h8M12 16v4" /></svg>
+    <!-- The same button as Bloch Sphere's: switches between light and dark, showing the theme it switches to (theme.js). -->
+    <button type="button" id="theme-button" class="theme-button" data-next="dark" title="Switch to the dark theme" aria-label="Switch to the dark theme">
       <svg class="icon-light" viewBox="0 0 24 24" aria-hidden="true">
         <circle cx="12" cy="12" r="4" />
         <path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" />
@@ -46,8 +46,27 @@
           <a class="button button-accent" href="Feras-Bisharat-CV.pdf">CV <span class="note">(PDF)</span></a>
           <a class="button" href="https://www.linkedin.com/in/feras-bisharat/">LinkedIn</a>
           <a class="button" href="https://github.com/ferasb">GitHub</a>
-          <a class="button" href="mailto:ferasbish@gmail.com">Email</a>
+          <button type="button" class="button" popovertarget="email-card">Email</button>
         </nav>
+
+        <!-- Opened by the Email button; closes on Escape or a click outside. email.js runs the Copy button. -->
+        <div id="email-card" class="email-card" popover role="dialog" aria-labelledby="email-card-title">
+          <div class="email-card-head">
+            <h2 id="email-card-title">Email</h2>
+            <button type="button" class="close" popovertarget="email-card" popovertargetaction="hide" aria-label="Close">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+            </button>
+          </div>
+          <div class="email-row">
+            <a class="email-address" href="mailto:ferasbish@gmail.com">ferasbish@gmail.com</a>
+            <button type="button" class="button copy" data-copy="ferasbish@gmail.com" autofocus>
+              <svg class="icon-copy" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2" /><path d="M5 15V5a2 2 0 0 1 2-2h8" /></svg>
+              <svg class="icon-done" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg>
+              <span class="label" aria-live="polite">Copy</span>
+            </button>
+          </div>
+          <p class="muted">Feel free to connect, I reply to all my emails.</p>
+        </div>
       </header>
 
       <section aria-labelledby="projects">

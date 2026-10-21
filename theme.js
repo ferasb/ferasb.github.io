@@ -1,59 +1,61 @@
-// The color theme: the system's by default, or the one the visitor picked with the theme button,
-// kept in localStorage. A pick sets data-theme on <html>, which theme.css reads. Loaded in <head>
-// without defer, so a picked theme applies before the page first paints.
+// The color theme: the system's until the visitor picks light or dark with the theme button; the
+// pick is kept in localStorage. A pick sets data-theme on <html>, which theme.css reads. Loaded in
+// <head> without defer, so a picked theme applies before the page first paints.
 (() => {
   const KEY = "theme";
-  const NEXT = { system: "light", light: "dark", dark: "system" };
-  const NAMES = { system: "match the system", light: "light", dark: "dark" };
   const root = document.documentElement;
+  const systemDark = window.matchMedia("(prefers-color-scheme: dark)");
 
   function load() {
     try {
       const value = localStorage.getItem(KEY);
-      return value === "light" || value === "dark" ? value : "system";
+      return value === "light" || value === "dark" ? value : null;
     } catch {
-      return "system";
+      return null;
     }
   }
 
-  function apply(choice) {
-    if (choice === "system") {
-      delete root.dataset.theme;
+  let picked = load();
+  const current = () => picked ?? (systemDark.matches ? "dark" : "light");
+
+  function apply() {
+    if (picked) {
+      root.dataset.theme = picked;
     } else {
-      root.dataset.theme = choice;
+      delete root.dataset.theme;
     }
+    // The button shows the theme it switches to.
     const button = document.getElementById("theme-button");
     if (button) {
-      const label = `Theme: ${NAMES[choice]}. Click for ${NAMES[NEXT[choice]]}.`;
-      button.dataset.choice = choice;
+      const next = current() === "dark" ? "light" : "dark";
+      const label = `Switch to the ${next} theme`;
+      button.dataset.next = next;
       button.title = label;
       button.setAttribute("aria-label", label);
     }
   }
 
-  function choose(choice) {
+  function toggle() {
+    picked = current() === "dark" ? "light" : "dark";
     try {
-      if (choice === "system") {
-        localStorage.removeItem(KEY);
-      } else {
-        localStorage.setItem(KEY, choice);
-      }
+      localStorage.setItem(KEY, picked);
     } catch {
-      // Storage blocked: the choice lasts until the page closes.
+      // Storage blocked: the pick lasts until the page closes.
     }
-    apply(choice);
+    apply();
   }
 
-  apply(load());
+  apply();
   document.addEventListener("DOMContentLoaded", () => {
-    const button = document.getElementById("theme-button");
-    button?.addEventListener("click", () => choose(NEXT[button.dataset.choice] ?? "light"));
-    apply(load());
+    document.getElementById("theme-button")?.addEventListener("click", toggle);
+    apply();
   });
-  // Another tab changed it.
+  // The system's theme changed (it only shows until a pick), or another tab picked one.
+  systemDark.addEventListener("change", apply);
   window.addEventListener("storage", (e) => {
     if (e.key === KEY) {
-      apply(load());
+      picked = load();
+      apply();
     }
   });
 })();
