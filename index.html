@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self'; img-src 'self'; font-src 'self'; base-uri 'none'; form-action 'none'" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="referrer" content="no-referrer" />
+    <meta name="description" content="Feras Bisharat, senior software engineer at NVIDIA: CV, projects and contact." />
+    <meta name="theme-color" content="oklch(0.15 0.025 264)" />
+    <link rel="canonical" href="https://ferasbisharat.com/" />
+    <meta property="og:type" content="profile" />
+    <meta property="og:url" content="https://ferasbisharat.com/" />
+    <meta property="og:title" content="Feras Bisharat" />
+    <meta property="og:description" content="Senior software engineer at NVIDIA: CV, projects and contact." />
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Feras Bisharat</title>
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>Feras Bisharat</h1>
+        <p class="lead">
+          Senior software engineer at NVIDIA, building the DOCA SDK for BlueField DPUs in C and C++. I studied Computer Science and
+          Mathematics at the Technion and have an MBA from Tel Aviv University, where I specialized in finance and investing.
+        </p>
+        <!-- Styled like Bloch Sphere's qubit chips: a pill with a colored dot. -->
+        <div class="interests">
+          <span id="interests-label" class="muted">Interested in</span>
+          <ul aria-labelledby="interests-label">
+            <li class="chip chip-1">Quantum Computing</li>
+            <li class="chip chip-2">Finance</li>
+          </ul>
+        </div>
+        <nav class="links" aria-label="Links">
+          <a class="button button-accent" href="Feras-Bisharat-CV.pdf">CV <span class="note">(PDF)</span></a>
+          <a class="button" href="https://www.linkedin.com/in/feras-bisharat/">LinkedIn</a>
+          <a class="button" href="https://github.com/ferasb">GitHub</a>
+          <a class="button" href="mailto:ferasbish@gmail.com">Email</a>
+        </nav>
+      </header>
+
+      <section aria-labelledby="projects">
+        <h2 id="projects">Projects</h2>
+        <article class="project">
+          <a href="https://bloch-sphere.ferasbisharat.com/" tabindex="-1" aria-hidden="true">
+            <img
+              src="img/bloch-sphere.webp"
+              width="1280"
+              height="720"
+              alt=""
+            />
+          </a>
+          <div class="body">
+            <h3><a href="https://bloch-sphere.ferasbisharat.com/">Bloch Sphere</a></h3>
+            <p>
+              An interactive Bloch sphere for students meeting quantum computing for the first time. Apply gates to qubits and watch their
+              states rotate, see every state and gate as exact numbers, and build your own gates in the Gate Lab.
+            </p>
+            <p class="muted">TypeScript, React, three.js · <a href="https://github.com/ferasb/bloch-sphere">Source on GitHub</a></p>
+          </div>
+        </article>
+      </section>
+    </main>
+
+    <footer class="muted">This site sets no cookies and tracks nothing.</footer>
+  </body>
+</html>
