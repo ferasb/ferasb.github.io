@@ -41,7 +41,7 @@ button:focus-visible {
   outline-offset: 2px;
 }
 
-/* The header is centered: the name in the middle, the intro and links under it. */
+/* The header: the name and the links centered, the intro left-aligned between them. */
 header {
   text-align: center;
 }
@@ -87,11 +87,11 @@ sup {
   line-height: 0;
 }
 
+/* The full width of the column, so it lines up with Projects below. In the main text color: white on dark. */
 .lead {
-  max-width: 640px;
-  margin-inline: auto;
-  color: var(--text-muted);
+  color: var(--text);
   font-size: 18px;
+  text-align: left;
 }
 
 .muted {
