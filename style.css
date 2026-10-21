@@ -173,11 +173,6 @@ sup {
   background: var(--border);
 }
 
-.button-accent {
-  border-color: var(--primary);
-  color: var(--primary);
-}
-
 .button .note {
   color: var(--text-muted);
   font-size: 14px;
