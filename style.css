@@ -187,7 +187,7 @@ sup {
 /* --- Email card: opened by the Email button (a popover, centered in the window) ------------- */
 
 .email-card {
-  width: min(400px, calc(100vw - 32px));
+  width: min(440px, calc(100vw - 32px));
   padding: 16px 20px 20px;
   border: 1px solid var(--border);
   border-radius: 12px;
@@ -236,8 +236,11 @@ sup {
   color: var(--text);
 }
 
+/* The address never breaks. When it and the buttons don't fit on one line (a narrow window, a wider
+   font), the buttons move under it together, and Copy widens to fill that line. */
 .email-row {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 8px;
   padding: 8px 8px 8px 14px;
@@ -247,9 +250,9 @@ sup {
 }
 
 .email-address {
-  flex: 1;
-  min-width: 0;
-  overflow-wrap: anywhere;
+  /* Takes nearly all the spare room on a shared line; Copy (grow 1) takes a line of its own. */
+  flex: 1000 0 auto;
+  white-space: nowrap;
   color: var(--text);
   font-size: 17px;
   font-weight: 600;
@@ -258,15 +261,25 @@ sup {
 .email-card .copy,
 .email-card .mail {
   display: flex;
-  flex: none;
   align-items: center;
+  justify-content: center;
   gap: 6px;
   padding: 6px 12px;
 }
 
-/* Just the envelope, as tall as Copy beside it. */
+.email-actions {
+  display: flex;
+  flex: 1 0 auto;
+  gap: 8px;
+}
+
+.email-card .copy {
+  flex: 1 0 auto;
+}
+
+/* Just the envelope; .email-actions stretches it to Copy's height. */
 .email-card .mail {
-  align-self: stretch;
+  flex: none;
   padding: 0 10px;
 }
 
@@ -275,22 +288,6 @@ sup {
   height: 18px;
 }
 
-/* Phones: the address on its own line, then a wide Copy and the mail button. */
-@media (max-width: 440px) {
-  .email-row {
-    flex-wrap: wrap;
-    padding: 12px;
-  }
-
-  .email-address {
-    flex-basis: 100%;
-  }
-
-  .email-card .copy {
-    flex: 1;
-    justify-content: center;
-  }
-}
 
 .email-card .copy.done {
   border-color: var(--success);
