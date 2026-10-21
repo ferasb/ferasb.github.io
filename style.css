@@ -239,7 +239,7 @@ sup {
 .email-row {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
   padding: 8px 8px 8px 14px;
   border: 1px solid var(--border-muted);
   border-radius: 10px;
@@ -253,19 +253,43 @@ sup {
   color: var(--text);
   font-size: 17px;
   font-weight: 600;
-  text-decoration: none;
 }
 
-.email-address:hover {
-  text-decoration: underline;
-}
-
-.email-card .copy {
+.email-card .copy,
+.email-card .mail {
   display: flex;
   flex: none;
   align-items: center;
   gap: 6px;
   padding: 6px 12px;
+}
+
+/* Just the envelope, as tall as Copy beside it. */
+.email-card .mail {
+  align-self: stretch;
+  padding: 0 10px;
+}
+
+.email-card .mail svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* Phones: the address on its own line, then a wide Copy and the mail button. */
+@media (max-width: 440px) {
+  .email-row {
+    flex-wrap: wrap;
+    padding: 12px;
+  }
+
+  .email-address {
+    flex-basis: 100%;
+  }
+
+  .email-card .copy {
+    flex: 1;
+    justify-content: center;
+  }
 }
 
 .email-card .copy.done {
