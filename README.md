@@ -4,9 +4,12 @@ My landing page: a short intro, my CV and my projects. Plain HTML and CSS, no bu
 
 ## Editing
 
-- **The page:** `index.html` and `style.css`. Colors and fonts follow [Bloch Sphere](https://github.com/ferasb/bloch-sphere)'s tokens.
+- **The page:** `index.html` and `style.css`, set in Inter (self-hosted in `fonts/`).
+- **The palette:** `theme.css`, the colors of all my sites, light and dark. It's the original: [Bloch Sphere](https://github.com/ferasb/bloch-sphere) keeps a copy in `web/src/theme.css`, so change it here first, then copy it over.
+- **Light and dark:** the page follows the system's theme; the button at the top steps through system, light and dark (`theme.js`), and remembers the choice in the browser.
 - **The CV:** replace `Feras-Bisharat-CV.pdf` with the new version, keeping the name, so links to it keep working.
-- **A new project:** copy the `<article class="project">` block in `index.html`. Screenshots go in `img/` as WebP, 1280×720.
+- **A new project:** copy the `<article class="project">` block in `index.html`. Screenshots go in `img/` as WebP, 1280×720, one light and one dark.
+- **Icons:** `favicon.svg` is "FB" traced from Inter Bold. `favicon.ico` and `apple-touch-icon.png` are rendered from it, for browsers and phones that don't use SVG icons.
 
 To preview, run `python3 -m http.server` here and open http://localhost:8000. Pushing to `main` publishes within a minute or two.
 
@@ -17,4 +20,4 @@ To preview, run `python3 -m http.server` here and open http://localhost:8000. Pu
 - DNS is at Porkbun: `A`/`AAAA` records for the bare domain and a `CNAME` for `www`, all pointing at GitHub Pages. Subdomains such as `bloch-sphere.ferasbisharat.com` are a `CNAME` to `ferasb.github.io`, plus the custom domain set in that repository's Pages settings.
 - There are no cookies, analytics or third-party requests. The Content Security Policy in each page's `<meta>` tag only allows files from this site.
 
-The Michroma font is under the SIL Open Font License (`fonts/OFL.txt`).
+The Inter font is under the SIL Open Font License (`fonts/OFL.txt`).

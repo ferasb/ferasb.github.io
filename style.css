@@ -1,41 +1,18 @@
 /*
- * The colors and fonts copy Bloch Sphere's tokens, and the buttons, chips and section labels copy its components
- * (bloch-sphere/web/src/styles.css), so the two sites look like one family. Change a color there, change it here.
+ * Colors come from theme.css, the palette shared with Bloch Sphere. The buttons copy Bloch Sphere's
+ * (bloch-sphere/web/src/styles.css), so the two sites look like one family.
  */
 
 @font-face {
-  font-family: Michroma;
+  font-family: Inter;
   font-style: normal;
-  font-weight: 400;
+  font-weight: 100 900;
   font-display: swap;
-  src: url("fonts/michroma-latin-400-normal.woff2") format("woff2");
+  src: url("fonts/inter-latin-wght-normal.woff2") format("woff2");
 }
 
 :root {
-  color-scheme: dark;
-
-  /* Surfaces */
-  --bg-dark: oklch(0.1 0.025 264);
-  --bg: oklch(0.15 0.025 264);
-  --bg-light: oklch(0.2 0.025 264);
-
-  /* Text */
-  --text: oklch(0.96 0.015 264);
-  --text-muted: oklch(0.76 0.05 264);
-
-  /* Lines and interaction states */
-  --highlight: oklch(0.5 0.05 264);
-  --border: oklch(0.4 0.05 264);
-  --border-muted: oklch(0.3 0.05 264);
-
-  /* Accents: --primary for links, focus and the main action; the first two qubit colors mark the interests. */
-  --primary: oklch(0.76 0.1 264);
-  --qubit-1: oklch(0.82 0.15 75); /* amber */
-  --qubit-2: oklch(0.6 0.15 295); /* violet */
-
-  --font-ui: system-ui, -apple-system, "Segoe UI", sans-serif;
-  /* The name: a wide face drawn for capitals, set in caps with extra tracking. */
-  --font-display: Michroma, var(--font-ui);
+  --font: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
 }
 
 *,
@@ -47,10 +24,10 @@
 body {
   max-width: 720px;
   margin: 0 auto;
-  padding: 72px 16px 40px;
+  padding: 24px 16px 40px;
   background: var(--bg);
   color: var(--text);
-  font: 16px/1.6 var(--font-ui);
+  font: 16px/1.6 var(--font);
 }
 
 a {
@@ -58,38 +35,32 @@ a {
   text-underline-offset: 3px;
 }
 
-a:focus-visible {
+a:focus-visible,
+button:focus-visible {
   outline: 2px solid var(--primary);
   outline-offset: 2px;
 }
 
-ul {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-/* Written in normal case in the HTML and capitalized here, so screen readers don't spell it out. */
 h1 {
-  margin: 0 0 12px;
-  font: 400 clamp(22px, 6vw, 32px) / 1.2 var(--font-display);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  margin: 48px 0 12px;
+  font-size: clamp(32px, 7vw, 44px);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
 }
 
-/* Bloch Sphere's section headings (STATE, JOURNEY). */
 h2 {
-  margin: 56px 0 12px;
-  color: var(--text-muted);
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  margin: 56px 0 16px;
+  font-size: 22px;
+  font-weight: 650;
+  letter-spacing: -0.015em;
 }
 
 h3 {
   margin: 0 0 6px;
   font-size: 20px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
 }
 
 h3 a {
@@ -105,6 +76,12 @@ p {
   margin: 0 0 12px;
 }
 
+/* ™ and ®: smaller than the text, and kept from stretching the line. */
+sup {
+  font-size: 0.7em;
+  line-height: 0;
+}
+
 .lead {
   color: var(--text-muted);
   font-size: 18px;
@@ -115,46 +92,45 @@ p {
   font-size: 14px;
 }
 
-/* --- Interests: Bloch Sphere's qubit chips ------------------------------------------------- */
+/* --- Theme button: shows the current choice (system, light, dark) --------------------------- */
 
-.interests {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-  margin-top: 20px;
-}
-
-.interests ul {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.chip {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 4px 12px;
+.theme-button {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 32px;
+  margin-left: auto;
+  padding: 0;
   border: 1px solid var(--border-muted);
-  border-radius: 999px;
-  background: var(--bg-dark);
-  font-size: 14px;
+  border-radius: 8px;
+  background: var(--bg-raised);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition:
+    background-color 0.12s,
+    border-color 0.12s;
 }
 
-.chip::before {
-  content: "";
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
+.theme-button:hover {
+  border-color: var(--highlight);
+  color: var(--text);
 }
 
-.chip-1::before {
-  background: var(--qubit-1);
+.theme-button svg {
+  display: none;
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
-.chip-2::before {
-  background: var(--qubit-2);
+.theme-button[data-choice="system"] .icon-system,
+.theme-button[data-choice="light"] .icon-light,
+.theme-button[data-choice="dark"] .icon-dark {
+  display: block;
 }
 
 /* --- Links: Bloch Sphere's buttons ---------------------------------------------------------- */
@@ -170,8 +146,9 @@ p {
   padding: 8px 16px;
   border: 1px solid var(--border-muted);
   border-radius: 8px;
-  background: var(--bg-light);
+  background: var(--bg-raised);
   color: var(--text);
+  font-weight: 500;
   text-decoration: none;
   transition:
     background-color 0.12s,
@@ -195,16 +172,16 @@ p {
 .button .note {
   color: var(--text-muted);
   font-size: 14px;
+  font-weight: 400;
 }
 
 /* --- Projects ------------------------------------------------------------------------------- */
 
-/* Like Bloch Sphere's gate toolbar: a box on the page with a full border. */
 .project {
   overflow: hidden;
   border: 1px solid var(--border);
   border-radius: 12px;
-  background: var(--bg-light);
+  background: var(--bg-raised);
 }
 
 .project img {
@@ -212,6 +189,29 @@ p {
   width: 100%;
   height: auto;
   border-bottom: 1px solid var(--border-muted);
+}
+
+/* The screenshot in the page's theme: light unless the system is dark (and the visitor didn't pick
+   light) or the visitor picked dark. Lazy loading skips the hidden one. */
+.project .only-dark {
+  display: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .project .only-light {
+    display: none;
+  }
+  :root:not([data-theme="light"]) .project .only-dark {
+    display: block;
+  }
+}
+
+:root[data-theme="dark"] .project .only-light {
+  display: none;
+}
+
+:root[data-theme="dark"] .project .only-dark {
+  display: block;
 }
 
 .project .body {
@@ -222,6 +222,11 @@ p {
 
 footer {
   margin-top: 56px;
+  font-size: 13px;
+}
+
+footer p {
+  margin-bottom: 6px;
 }
 
 @media (prefers-reduced-motion: reduce) {
