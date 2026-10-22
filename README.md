@@ -9,7 +9,8 @@ My landing page: a short intro, my CV and my projects. Plain HTML and CSS, no bu
 - **Light and dark:** the page follows the system's theme until the visitor picks one with the button at the top (`theme.js`), which the browser remembers.
 - **The Email button** opens a card with the address, a Copy button (`email.js`), a mail button that opens the visitor's mail app, and a short note. It's a popover, so it opens and closes without JavaScript; only Copy needs it.
 - **The CV:** replace `Feras-Bisharat-CV.pdf` with the new version, keeping the name, so links to it keep working.
-- **A new project:** copy the `<article class="project">` block in `index.html`. Screenshots go in `img/` as WebP, 1280×720, one light and one dark.
+- **A new project:** copy an `<article class="project">` block inside `<div class="projects" data-carousel>` in `index.html`. Screenshots go in `img/` as WebP, 1280×720, one light and one dark.
+- **The projects ring** (`projects.js`): the articles become a 3D ring of cards, the screenshots, that turns slowly and stops while the visitor hovers, drags, swipes, clicks an arrow or a dot, or presses ← →. The front project's article shows under the ring. With fewer than six projects each appears more than once, so the ring looks full. Without JavaScript, or with reduced motion turned on, the articles are shown as a plain list.
 - **Icons:** `favicon.svg` is "FB" traced from Inter Bold. `favicon.ico` and `apple-touch-icon.png` are rendered from it, for browsers and phones that don't use SVG icons.
 
 To preview, run `python3 -m http.server` here and open http://localhost:8000. Pushing to `main` publishes within a minute or two.

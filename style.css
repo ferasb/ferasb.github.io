@@ -328,31 +328,187 @@ sup {
   border-bottom: 1px solid var(--border-muted);
 }
 
-/* The screenshot in the page's theme: light unless the system is dark (and the visitor didn't pick
-   light) or the visitor picked dark. Lazy loading skips the hidden one. */
-.project .only-dark {
+/* Screenshots in the page's theme (the projects and the ring's cards): light unless the system is
+   dark (and the visitor didn't pick light) or the visitor picked dark. Lazy loading skips the hidden
+   one. img. in each selector so these win over .project img and .card img. */
+img.only-dark {
   display: none;
 }
 
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .project .only-light {
+  :root:not([data-theme="light"]) img.only-light {
     display: none;
   }
-  :root:not([data-theme="light"]) .project .only-dark {
+  :root:not([data-theme="light"]) img.only-dark {
     display: block;
   }
 }
 
-:root[data-theme="dark"] .project .only-light {
+:root[data-theme="dark"] img.only-light {
   display: none;
 }
 
-:root[data-theme="dark"] .project .only-dark {
+:root[data-theme="dark"] img.only-dark {
   display: block;
 }
 
 .project .body {
   padding: 20px 20px 8px;
+}
+
+.projects {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* --- Projects as a 3D ring (projects.js; without it, the list above) ------------------------ */
+
+.carousel {
+  --card-w: min(340px, 64vw);
+  --card-title: 46px;
+}
+
+/* Wider than the column by its padding, so the side cards have room. */
+.stage {
+  position: relative;
+  height: calc(var(--card-w) * 9 / 16 + var(--card-title) + 72px);
+  margin: 0 -16px;
+  overflow: hidden;
+  perspective: 1100px;
+  /* Vertical swipes still scroll the page; sideways ones turn the ring. */
+  touch-action: pan-y;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.stage:active {
+  cursor: grabbing;
+}
+
+.ring {
+  position: absolute;
+  top: 24px;
+  left: 50%;
+  width: var(--card-w);
+  margin-left: calc(var(--card-w) / -2);
+  transform-style: preserve-3d;
+}
+
+.card {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  width: var(--card-w);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--bg-raised);
+  color: var(--text);
+  text-decoration: none;
+  box-shadow: 0 12px 32px var(--shadow);
+  /* The cards behind the ring don't show through it, mirrored. */
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.card.front {
+  border-color: var(--highlight);
+}
+
+/* Shown or hidden by img.only-light/only-dark above, so no display here; top-aligned, so no gap under it. */
+.card img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  vertical-align: top;
+  border-bottom: 1px solid var(--border-muted);
+  pointer-events: none;
+}
+
+.card-title {
+  display: flex;
+  align-items: center;
+  height: var(--card-title);
+  padding: 0 16px;
+  font-size: 17px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 0 0 20px;
+}
+
+.button.arrow {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  padding: 0 0 2px;
+  font-size: 22px;
+  line-height: 1;
+}
+
+.dots {
+  display: flex;
+  gap: 2px;
+}
+
+/* A 24px target around a 10px dot. */
+.dot {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+}
+
+.dot::after {
+  content: "";
+  width: 10px;
+  height: 10px;
+  border: 1px solid var(--highlight);
+  border-radius: 50%;
+}
+
+.dot[aria-current="true"]::after {
+  border-color: var(--primary);
+  background: var(--primary);
+}
+
+/* The front project's article, under the ring: its screenshot is on the ring already. */
+.detail .project > a {
+  display: none;
+}
+
+/* Stacked in one grid cell, so the spot is as tall as the longest; the front one fades in. Hidden
+   ones are invisible to screen readers and the keyboard too. */
+.detail {
+  display: grid;
+}
+
+.detail .project {
+  grid-area: 1 / 1;
+  transition: opacity 0.35s ease-out;
+}
+
+.detail .project.inactive {
+  visibility: hidden;
+  opacity: 0;
+  transition:
+    opacity 0.2s,
+    visibility 0s 0.2s;
 }
 
 /* --- Footer --------------------------------------------------------------------------------- */

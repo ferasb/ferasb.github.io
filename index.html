@@ -22,6 +22,7 @@
     <!-- Not deferred: it applies a picked theme before the page first paints. -->
     <script src="theme.js"></script>
     <script src="email.js" defer></script>
+    <script src="projects.js" defer></script>
     <title>Feras Bisharat</title>
   </head>
   <body>
@@ -77,22 +78,40 @@
 
       <section aria-labelledby="projects">
         <h2 id="projects">Projects</h2>
-        <article class="project">
-          <a href="https://bloch-sphere.ferasbisharat.com/" tabindex="-1" aria-hidden="true">
-            <!-- In the page's theme: style.css shows one of the two. -->
-            <img class="only-light" src="img/bloch-sphere-light.webp" width="1280" height="720" alt="" loading="lazy" />
-            <img class="only-dark" src="img/bloch-sphere-dark.webp" width="1280" height="720" alt="" loading="lazy" />
-          </a>
-          <div class="body">
-            <h3><a href="https://bloch-sphere.ferasbisharat.com/">Bloch Sphere</a></h3>
-            <p>
-              An interactive Bloch sphere for students meeting quantum computing for the first time. Apply gates to qubits and watch their
-              states rotate, see every state and gate as exact numbers, build your own gates in the Gate Lab, and play challenges. With
-              <a href="https://bloch-sphere.ferasbisharat.com/learn/">beginner guides</a> to qubits, the Bloch sphere and every gate.
-            </p>
-            <p class="muted">TypeScript, React, three.js · <a href="https://github.com/ferasb/bloch-sphere">Source on GitHub</a></p>
-          </div>
-        </article>
+        <!-- The projects: a 3D ring of cards with projects.js, this list without it (README). -->
+        <div class="projects" data-carousel>
+          <article class="project">
+            <a href="https://bloch-sphere.ferasbisharat.com/" tabindex="-1" aria-hidden="true">
+              <!-- In the page's theme: style.css shows one of the two. -->
+              <img class="only-light" src="img/bloch-sphere-light.webp" width="1280" height="720" alt="" loading="lazy" />
+              <img class="only-dark" src="img/bloch-sphere-dark.webp" width="1280" height="720" alt="" loading="lazy" />
+            </a>
+            <div class="body">
+              <h3><a href="https://bloch-sphere.ferasbisharat.com/">Bloch Sphere</a></h3>
+              <p>
+                An interactive Bloch sphere for students meeting quantum computing for the first time. Apply gates to qubits and watch their
+                states rotate, see every state and gate as exact numbers, build your own gates in the Gate Lab, and play challenges. With
+                <a href="https://bloch-sphere.ferasbisharat.com/learn/">beginner guides</a> to qubits, the Bloch sphere and every gate.
+              </p>
+              <p class="muted">TypeScript, React, three.js · <a href="https://github.com/ferasb/bloch-sphere">Source on GitHub</a></p>
+            </div>
+          </article>
+          <article class="project">
+            <a href="https://rekt.ferasbisharat.com/" tabindex="-1" aria-hidden="true">
+              <img class="only-light" src="img/rekt-light.webp" width="1280" height="720" alt="" loading="lazy" />
+              <img class="only-dark" src="img/rekt-dark.webp" width="1280" height="720" alt="" loading="lazy" />
+            </a>
+            <div class="body">
+              <h3><a href="https://rekt.ferasbisharat.com/">rekt</a></h3>
+              <p>
+                A trading game with play money and live prices. Start with $10,000, go long or short on 400+ coins and 175 stocks with up to
+                100× leverage, or call the next minute in Up or Down. Win and there's confetti; get liquidated and you get rekt. Positions
+                keep running while the tab is closed, and nothing leaves your browser.
+              </p>
+              <p class="muted">TypeScript, React, WebSockets · <a href="https://github.com/ferasb/rekt">Source on GitHub</a></p>
+            </div>
+          </article>
+        </div>
       </section>
     </main>
 
