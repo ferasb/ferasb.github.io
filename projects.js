@@ -60,8 +60,18 @@
       card.tabIndex = -1;
       card.draggable = false;
       for (const img of project.querySelectorAll(":scope > a img")) {
-        const copy = img.cloneNode();
-        copy.loading = "eager";
+        // The same picture as the list's, so the browser reuses it rather than downloading another
+        // size. Lazy, so the other theme's picture (display: none) is never fetched; set before the
+        // address, since a browser can start fetching as soon as it has one (cloneNode copies src first).
+        const copy = document.createElement("img");
+        copy.loading = "lazy";
+        copy.className = img.className;
+        copy.setAttribute("width", img.getAttribute("width"));
+        copy.setAttribute("height", img.getAttribute("height"));
+        copy.alt = "";
+        copy.sizes = img.sizes;
+        copy.srcset = img.getAttribute("srcset") ?? "";
+        copy.src = img.getAttribute("src");
         copy.draggable = false;
         card.append(copy);
       }

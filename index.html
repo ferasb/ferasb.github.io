@@ -13,6 +13,11 @@
     <meta property="og:url" content="https://ferasbisharat.com/" />
     <meta property="og:title" content="Feras Bisharat" />
     <meta property="og:description" content="Senior software engineer at NVIDIA: CV, projects and contact." />
+    <meta property="og:image" content="https://ferasbisharat.com/og.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Feras Bisharat, senior software engineer at NVIDIA: CV, projects and contact" />
+    <meta name="twitter:card" content="summary_large_image" />
     <link rel="icon" href="favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="favicon.ico" sizes="32x32" />
     <link rel="apple-touch-icon" href="apple-touch-icon.png" />
@@ -24,6 +29,23 @@
     <script src="email.js" defer></script>
     <script src="projects.js" defer></script>
     <title>Feras Bisharat</title>
+    <!-- Who this is, for search engines: links the site, LinkedIn and GitHub as one person. A data
+         block, never run, so the CSP doesn't apply. -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Feras Bisharat",
+        "url": "https://ferasbisharat.com/",
+        "jobTitle": "Senior Software Engineer",
+        "worksFor": { "@type": "Organization", "name": "NVIDIA" },
+        "alumniOf": [
+          { "@type": "CollegeOrUniversity", "name": "Technion – Israel Institute of Technology" },
+          { "@type": "CollegeOrUniversity", "name": "Tel Aviv University" }
+        ],
+        "sameAs": ["https://www.linkedin.com/in/feras-bisharat/", "https://github.com/ferasb"]
+      }
+    </script>
   </head>
   <body>
     <!-- The same button as Bloch Sphere's: switches between light and dark, showing the theme it switches to (theme.js). -->
@@ -82,9 +104,10 @@
         <div class="projects" data-carousel>
           <article class="project">
             <a href="https://bloch-sphere.ferasbisharat.com/" tabindex="-1" aria-hidden="true">
-              <!-- In the page's theme: style.css shows one of the two. -->
-              <img class="only-light" src="img/bloch-sphere-light.webp" width="1280" height="720" alt="" loading="lazy" />
-              <img class="only-dark" src="img/bloch-sphere-dark.webp" width="1280" height="720" alt="" loading="lazy" />
+              <!-- In the page's theme: style.css shows one of the two. Each comes at 720 and 1280 pixels wide;
+                   the browser picks by the space and the screen's density (the ring's cards reuse the same one). -->
+              <img class="only-light" src="img/bloch-sphere-light.webp" srcset="img/bloch-sphere-light-720.webp 720w, img/bloch-sphere-light.webp 1280w" sizes="(max-width: 752px) calc(100vw - 32px), 720px" width="1280" height="720" alt="" loading="lazy" />
+              <img class="only-dark" src="img/bloch-sphere-dark.webp" srcset="img/bloch-sphere-dark-720.webp 720w, img/bloch-sphere-dark.webp 1280w" sizes="(max-width: 752px) calc(100vw - 32px), 720px" width="1280" height="720" alt="" loading="lazy" />
             </a>
             <div class="body">
               <h3><a href="https://bloch-sphere.ferasbisharat.com/">Bloch Sphere</a></h3>
@@ -98,8 +121,8 @@
           </article>
           <article class="project">
             <a href="https://rekt.ferasbisharat.com/" tabindex="-1" aria-hidden="true">
-              <img class="only-light" src="img/rekt-light.webp" width="1280" height="720" alt="" loading="lazy" />
-              <img class="only-dark" src="img/rekt-dark.webp" width="1280" height="720" alt="" loading="lazy" />
+              <img class="only-light" src="img/rekt-light.webp" srcset="img/rekt-light-720.webp 720w, img/rekt-light.webp 1280w" sizes="(max-width: 752px) calc(100vw - 32px), 720px" width="1280" height="720" alt="" loading="lazy" />
+              <img class="only-dark" src="img/rekt-dark.webp" srcset="img/rekt-dark-720.webp 720w, img/rekt-dark.webp 1280w" sizes="(max-width: 752px) calc(100vw - 32px), 720px" width="1280" height="720" alt="" loading="lazy" />
             </a>
             <div class="body">
               <h3><a href="https://rekt.ferasbisharat.com/">rekt</a></h3>
