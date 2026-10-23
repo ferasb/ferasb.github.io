@@ -456,6 +456,39 @@ img.only-dark {
   line-height: 1;
 }
 
+/* The pause button: a little apart from the arrows, showing what a press does. */
+.button.pause {
+  margin-left: 8px;
+  color: var(--text-muted);
+}
+
+.button.pause:hover {
+  color: var(--text);
+}
+
+.button.pause svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.button.pause .icon-play {
+  display: none;
+}
+
+.button.pause.paused .icon-play {
+  display: block;
+  fill: currentColor;
+}
+
+.button.pause.paused .icon-pause {
+  display: none;
+}
+
 .dots {
   display: flex;
   gap: 2px;

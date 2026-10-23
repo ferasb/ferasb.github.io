@@ -4,7 +4,8 @@
 //
 // The ring turns slowly by itself, pausing while the pointer is over it, while it has keyboard focus,
 // and for a few seconds after the visitor drags, swipes, clicks or presses an arrow key; then it eases
-// back into its spin. With fewer
+// back into its spin. The pause button stops it until pressed again (WCAG 2.2.2: anything that moves
+// for more than five seconds needs a way to stop it). With fewer
 // than six projects each one appears more than once, so the ring never looks empty.
 (() => {
   /** At least this many cards around the ring. */
@@ -95,7 +96,38 @@
     const dotRow = document.createElement("div");
     dotRow.className = "dots";
     dotRow.append(...dots);
-    controls.append(arrow("Previous project", "‹", -1), dotRow, arrow("Next project", "›", 1));
+
+    // Pause and play: two icons, one shown at a time (style.css), the label saying what a press does.
+    const svg = (paths) => {
+      const icon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      icon.setAttribute("viewBox", "0 0 24 24");
+      icon.setAttribute("aria-hidden", "true");
+      for (const d of paths) {
+        const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        path.setAttribute("d", d);
+        icon.append(path);
+      }
+      return icon;
+    };
+    const pauseButton = document.createElement("button");
+    pauseButton.type = "button";
+    pauseButton.className = "button arrow pause";
+    const pauseIcon = svg(["M8 5v14", "M16 5v14"]);
+    pauseIcon.classList.add("icon-pause");
+    const playIcon = svg(["M8 5l11 7-11 7z"]);
+    playIcon.classList.add("icon-play");
+    pauseButton.append(pauseIcon, playIcon);
+    const showPaused = () => {
+      pauseButton.classList.toggle("paused", paused);
+      pauseButton.setAttribute("aria-label", paused ? "Start the rotation" : "Stop the rotation");
+      pauseButton.title = paused ? "Start the rotation" : "Stop the rotation";
+    };
+    pauseButton.addEventListener("click", () => {
+      paused = !paused;
+      showPaused();
+    });
+
+    controls.append(arrow("Previous project", "‹", -1), dotRow, arrow("Next project", "›", 1), pauseButton);
 
     // The front project's article. Its own screenshot is hidden here (the ring shows it). All the
     // articles share one spot, sized to the tallest, so the page doesn't jump as the ring turns.
@@ -113,6 +145,8 @@
     let tween = null; // { from, to, start }
     let drag = null; // { x, angle, moved, lastX, lastT, v }
     let hovering = false;
+    /** Stopped with the pause button, until it's pressed again. */
+    let paused = false;
     let heldUntil = 0;
     let shown = -1;
 
@@ -120,7 +154,7 @@
     // Keyboard focus holds it (someone is reading or stepping through); focus left on a button by a
     // mouse click doesn't, or a click would stop the ring for good.
     const keyboardFocus = () => carousel.querySelector(":focus-visible") !== null;
-    const spinning = () => !drag && !tween && !hovering && !keyboardFocus() && performance.now() > heldUntil;
+    const spinning = () => !paused && !drag && !tween && !hovering && !keyboardFocus() && performance.now() > heldUntil;
     const frontSlot = () => ((Math.round(angle / step) % slots) + slots) % slots;
 
     function layout() {
@@ -270,6 +304,7 @@
       }
     });
 
+    showPaused();
     window.addEventListener("resize", layout);
     // The screenshots set the cards' height: lay out again once one has loaded.
     cards[0].querySelector("img")?.addEventListener("load", layout, { once: true });
