@@ -18,12 +18,28 @@
   let picked = load();
   const current = () => picked ?? (systemDark.matches ? "dark" : "light");
 
+  // The browser bar's color (Safari, Chrome on Android): the page has a theme-color tag for each
+  // system theme. A pick gives both tags the picked theme's color, so the bar matches the page. Each
+  // tag's own color is kept here for when there's no pick.
+  const barColors = new Map();
+  function paintBar() {
+    const tags = [...document.querySelectorAll('meta[name="theme-color"][media]')];
+    for (const tag of tags) {
+      if (!barColors.has(tag)) barColors.set(tag, tag.content);
+    }
+    const pickedTag = picked && tags.find((tag) => tag.media.includes(picked));
+    for (const tag of tags) {
+      tag.content = barColors.get(pickedTag || tag);
+    }
+  }
+
   function apply() {
     if (picked) {
       root.dataset.theme = picked;
     } else {
       delete root.dataset.theme;
     }
+    paintBar();
     // The button shows the theme it switches to.
     const button = document.getElementById("theme-button");
     if (button) {
