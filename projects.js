@@ -3,10 +3,11 @@
 // simply shown as it is. The cards are pictures; the front project's article shows under the ring.
 //
 // The ring turns slowly by itself, pausing while the pointer is over it, while it has keyboard focus,
-// and for a few seconds after the visitor drags, swipes, clicks or presses an arrow key; then it eases
-// back into its spin. The pause button stops it until pressed again (WCAG 2.2.2: anything that moves
-// for more than five seconds needs a way to stop it). With fewer
-// than six projects each one appears more than once, so the ring never looks empty.
+// while it's scrolled out of view, and for a few seconds after the visitor drags, swipes, clicks or
+// presses an arrow key; then it eases back into its spin. The pause button stops it until pressed
+// again (WCAG 2.2.2: anything that moves for more than five seconds needs a way to stop it). It only
+// draws while it moves, so a ring at rest costs nothing. With fewer than six projects each one
+// appears more than once, so the ring never looks empty.
 (() => {
   /** At least this many cards around the ring. */
   const MIN_CARDS = 6;
@@ -61,8 +62,10 @@
       card.draggable = false;
       for (const img of project.querySelectorAll(":scope > a img")) {
         // The same picture as the list's, so the browser reuses it rather than downloading another
-        // size. Lazy, so the other theme's picture (display: none) is never fetched; set before the
-        // address, since a browser can start fetching as soon as it has one (cloneNode copies src first).
+        // size: on a slow connection the list's pictures start loading before this script runs, so a
+        // smaller, card-sized one would be a second download. Lazy, so the other theme's picture
+        // (display: none) is never fetched; set before the address, since a browser can start
+        // fetching as soon as it has one (cloneNode copies src first).
         const copy = document.createElement("img");
         copy.loading = "lazy";
         copy.className = img.className;
@@ -135,6 +138,7 @@
     pauseButton.addEventListener("click", () => {
       paused = !paused;
       showPaused();
+      wake();
     });
 
     controls.append(arrow("Previous project", "‹", -1), dotRow, arrow("Next project", "›", 1), pauseButton);
@@ -157,14 +161,25 @@
     let hovering = false;
     /** Stopped with the pause button, until it's pressed again. */
     let paused = false;
-    let heldUntil = 0;
+    /** Still for IDLE_MS after the visitor does something; a timer ends it and wakes the ring. */
+    let held = false;
+    let holdTimer = 0;
+    /** Whether the ring is in view: scrolled away, it doesn't spin. */
+    let onScreen = true;
     let shown = -1;
 
-    const hold = () => (heldUntil = performance.now() + IDLE_MS);
+    function hold() {
+      held = true;
+      clearTimeout(holdTimer);
+      holdTimer = setTimeout(() => {
+        held = false;
+        wake();
+      }, IDLE_MS);
+    }
     // Keyboard focus holds it (someone is reading or stepping through); focus left on a button by a
     // mouse click doesn't, or a click would stop the ring for good.
     const keyboardFocus = () => carousel.querySelector(":focus-visible") !== null;
-    const spinning = () => !paused && !drag && !tween && !hovering && !keyboardFocus() && performance.now() > heldUntil;
+    const spinning = () => onScreen && !paused && !drag && !tween && !hovering && !keyboardFocus() && !held;
     const frontSlot = () => ((Math.round(angle / step) % slots) + slots) % slots;
 
     function layout() {
@@ -196,12 +211,14 @@
         dots.forEach((d, i) => d.setAttribute("aria-current", i === project ? "true" : "false"));
       }
       // Announce the project only when it changes because the visitor asked, not while spinning.
-      detail.setAttribute("aria-live", spinning() ? "off" : "polite");
+      const live = spinning() ? "off" : "polite";
+      if (detail.getAttribute("aria-live") !== live) detail.setAttribute("aria-live", live);
     }
 
     function animateTo(target) {
       tween = { from: angle, to: target, start: performance.now() };
       hold();
+      wake();
     }
 
     /** One card forward or back. */
@@ -230,12 +247,23 @@
       animateTo(best);
     }
 
-    let last = performance.now();
+    let last = null;
     /** The spin's current speed: it eases back up to SPIN after a pause. */
     let speed = SPIN;
+    /** The next frame, while the ring moves; 0 while it rests. */
+    let frameId = 0;
+
+    /** Draws again if the ring was resting: called by anything that can set it moving. */
+    function wake() {
+      if (frameId) return;
+      last = null;
+      frameId = requestAnimationFrame(frame);
+    }
+
     function frame(now) {
-      // Capped, so coming back to a background tab doesn't jump the ring.
-      const dt = Math.min(now - last, 50) / 1000;
+      // Nothing on the first frame after a rest; capped, so coming back to a background tab doesn't
+      // jump the ring.
+      const dt = last === null ? 0 : Math.min(now - last, 50) / 1000;
       last = now;
       if (tween) {
         const t = Math.min(1, (now - tween.start) / TURN_MS);
@@ -247,15 +275,21 @@
       }
       if (!spinning()) speed = 0;
       render();
-      requestAnimationFrame(frame);
+      // Rests once nothing moves, until wake().
+      frameId = tween || drag || spinning() ? requestAnimationFrame(frame) : 0;
     }
 
     // --- Input -------------------------------------------------------------------------------
 
-    stage.addEventListener("pointerenter", (e) => e.pointerType === "mouse" && (hovering = true));
-    stage.addEventListener("pointerleave", () => (hovering = false));
-    detail.addEventListener("pointerenter", (e) => e.pointerType === "mouse" && (hovering = true));
-    detail.addEventListener("pointerleave", () => (hovering = false));
+    const enter = (e) => e.pointerType === "mouse" && (hovering = true);
+    const leave = () => {
+      hovering = false;
+      wake();
+    };
+    stage.addEventListener("pointerenter", enter);
+    stage.addEventListener("pointerleave", leave);
+    detail.addEventListener("pointerenter", enter);
+    detail.addEventListener("pointerleave", leave);
 
     /** How far the last press moved: the click that follows a drag isn't a click. */
     let lastMoved = 0;
@@ -264,6 +298,7 @@
       tween = null;
       lastMoved = 0;
       drag = { x: e.clientX, angle, moved: 0, lastX: e.clientX, lastT: e.timeStamp, v: 0, captured: false };
+      wake();
     });
     stage.addEventListener("pointermove", (e) => {
       if (!drag) return;
@@ -313,12 +348,20 @@
         turnBy(e.key === "ArrowLeft" ? -1 : 1);
       }
     });
+    // Keyboard focus leaving the ring may let it spin again.
+    carousel.addEventListener("focusout", wake);
+
+    // A fast scroll can bring several entries at once: the last is the latest.
+    new IntersectionObserver((entries) => {
+      onScreen = entries[entries.length - 1].isIntersecting;
+      wake();
+    }).observe(stage);
 
     showPaused();
     window.addEventListener("resize", layout);
     // The screenshots set the cards' height: lay out again once one has loaded.
     cards[0].querySelector("img")?.addEventListener("load", layout, { once: true });
     layout();
-    requestAnimationFrame(frame);
+    wake();
   }
 })();
