@@ -6,7 +6,7 @@ My landing page: a short intro, my CV and my projects. Plain HTML and CSS, no bu
 
 - **The page:** `index.html` and `style.css`, set in Inter (self-hosted in `fonts/`).
 - **The palette:** `theme.css`, the colors of all my sites, light and dark. It's the original: [Bloch Sphere](https://github.com/ferasb/bloch-sphere) keeps a copy in `web/src/theme.css`, so change it here first, then copy it over.
-- **Light and dark:** the page follows the system's theme until the visitor picks one with the button at the top (`theme.js`), which the browser remembers.
+- **Light and dark:** the page follows the system's theme until the visitor picks one with the button at the top (`theme.js`), which the browser remembers. The browser bar's color (the `theme-color` tags in `index.html`, copies of `--bg`) follows the pick too.
 - **The Email button** opens a card with the address, a Copy button (`email.js`), a mail button that opens the visitor's mail app, and a short note. It's a popover, so it opens and closes without JavaScript; only Copy needs it.
 - **The CV:** replace `Feras-Bisharat-CV.pdf` with the new version, keeping the name, so links to it keep working.
 - **A new project:** copy an `<article class="project">` block inside `<div class="projects" data-carousel>` in `index.html`. Screenshots go in `img/` as WebP, one light and one dark, each at 1280×720 and as a 720×405 `-720` copy, listed in the `<img>`'s `srcset`: the browser picks the size for the space and the screen.
