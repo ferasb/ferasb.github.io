@@ -149,6 +149,18 @@ sup {
   margin-top: 28px;
 }
 
+/* The four links need 384px for one line, a 416px window with the page's padding; a few pixels more
+   allow for fonts that render wider. Narrower, as on most phones: two lines of two, the same width,
+   rather than Email on a line of its own. A new link changes the 419px. */
+@media (max-width: 419px) {
+  .links {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    max-width: 300px;
+    margin-inline: auto;
+  }
+}
+
 .button {
   padding: 8px 16px;
   border: 1px solid var(--border-muted);
