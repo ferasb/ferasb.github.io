@@ -5,7 +5,7 @@ My landing page: a short intro, my CV and my projects. Plain HTML and CSS, no bu
 ## Editing
 
 - **The page:** `index.html` and `style.css`, set in Inter (self-hosted in `fonts/`).
-- **The palette:** `theme.css`, the colors of all my sites, light and dark. It's the original: [Bloch Sphere](https://github.com/ferasb/bloch-sphere) keeps a copy in `web/src/theme.css`, so change it here first, then copy it over.
+- **The palette:** `theme.css`, the colors of all my sites, light and dark. It's the original: [Bloch Sphere](https://github.com/ferasb/bloch-sphere) and [rekt](https://github.com/ferasb/rekt) each keep a copy in `web/src/theme.css`, so change it here first, then copy it over.
 - **Light and dark:** the page follows the system's theme until the visitor picks one with the button at the top (`theme.js`), which the browser remembers. The browser bar's color (the `theme-color` tags in `index.html`, copies of `--bg`) follows the pick too.
 - **The Email button** opens a card with the address, a Copy button (`email.js`), a mail button that opens the visitor's mail app, and a short note. It's a popover, so it opens and closes without JavaScript; only Copy needs it.
 - **The CV:** replace `Feras-Bisharat-CV.pdf` with the new version, keeping the name, so links to it keep working.
