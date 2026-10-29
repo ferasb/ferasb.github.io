@@ -1,8 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <!-- "FB" in Inter Bold, traced to paths, on a tile in the light theme's primary (theme.css). -->
-  <rect width="32" height="32" rx="7" style="fill: oklch(0.5 0.15 264)" />
+  <!-- "FB" in Inter Bold, traced to paths: in the dark theme's gold (the primary token in style.css)
+       on a tile in its cobalt (the raised-surface token). favicon.ico and apple-touch-icon.png are rendered from it. -->
+  <rect width="32" height="32" rx="7" style="fill: oklch(0.215 0.058 264)" />
   <path
-    style="fill: #fff"
+    style="fill: oklch(0.84 0.15 85)"
     d="M5.57 22.75V9.25H14.45V11.55H8.34V15.31H13.86V17.57H8.34V22.75ZM16.09 22.75V9.25H21.45Q22.93 9.25 23.92 9.7Q24.91 10.15 25.41 10.93Q25.9 11.71 25.9 12.72Q25.9 13.52 25.59 14.11Q25.27 14.7 24.72 15.08Q24.17 15.46 23.48 15.62V15.75Q24.24 15.78 24.91 16.18Q25.59 16.59 26.01 17.31Q26.43 18.03 26.43 19.03Q26.43 20.09 25.91 20.94Q25.38 21.78 24.35 22.26Q23.32 22.75 21.8 22.75ZM18.86 20.47H21.25Q22.47 20.47 23.02 20Q23.58 19.53 23.58 18.77Q23.58 18.2 23.31 17.75Q23.03 17.31 22.52 17.06Q22.02 16.81 21.32 16.81H18.86ZM18.86 14.92H21.04Q21.63 14.92 22.1 14.71Q22.57 14.5 22.84 14.1Q23.11 13.71 23.11 13.16Q23.11 12.43 22.59 11.97Q22.06 11.51 21.09 11.51H18.86Z"
   />
 </svg>

@@ -1,5 +1,6 @@
 /*
- * Colors come from theme.css, the palette shared with Bloch Sphere. The buttons copy Bloch Sphere's
+ * Colors are tokens: theme.css, the palette shared with Bloch Sphere and rekt, with this site's own
+ * surfaces and accent over it (below). The buttons copy Bloch Sphere's
  * (bloch-sphere/web/src/styles.css), so the two sites look like one family.
  */
 
@@ -11,8 +12,62 @@
   src: url("fonts/inter-latin-wght-normal.woff2") format("woff2");
 }
 
+/* The display face, for the name: weight and optical size (a tighter cut at large sizes, which the
+   browser picks by itself). */
+@font-face {
+  font-family: "Bricolage Grotesque";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("fonts/bricolage-grotesque-latin-opsz-normal.woff2") format("woff2");
+}
+
+/* The projects' own wordmark faces, so each title looks as it does in its app: Michroma for Bloch
+   Sphere, Bungee for rekt. */
+@font-face {
+  font-family: Michroma;
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/michroma-latin-400-normal.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: Bungee;
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/bungee-latin-400-normal.woff2") format("woff2");
+}
+
 :root {
   --font: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --display: "Bricolage Grotesque", Inter, system-ui, sans-serif;
+  /* Labels and indexes: the system's monospace, so nothing more to download. */
+  --mono: ui-monospace, "SF Mono", "Cascadia Mono", "Segoe UI Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  /* This site's surfaces, text, lines and accent, over theme.css's (which Bloch Sphere and rekt
+     keep). Dark: a deep cobalt with a gold accent. Light: the same as ink on parchment, a warm cream
+     page with cobalt text and accent (gold can't be read on a light page). The theme-color tags copy
+     --bg. */
+  --bg-sunken: light-dark(oklch(0.93 0.018 85), oklch(0.145 0.045 262));
+  --bg: light-dark(oklch(0.965 0.013 85), oklch(0.18 0.052 262));
+  --bg-raised: light-dark(oklch(0.99 0.006 85), oklch(0.215 0.058 264));
+  --text: light-dark(oklch(0.22 0.05 264), oklch(0.97 0.01 264));
+  --text-muted: light-dark(oklch(0.44 0.05 264), oklch(0.78 0.04 264));
+  --highlight: light-dark(oklch(0.62 0.04 80), oklch(0.43 0.075 264));
+  --border: light-dark(oklch(0.8 0.03 80), oklch(0.33 0.07 264));
+  --border-muted: light-dark(oklch(0.88 0.022 80), oklch(0.26 0.06 264));
+  --primary: light-dark(oklch(0.42 0.15 264), oklch(0.84 0.15 85));
+  /* The background's mottling: lighter and darker patches of the page's blue. */
+  --wash: color-mix(in oklch, var(--bg-raised) 90%, var(--text));
+  --wash-faint: var(--bg-sunken);
+  /* Patches that drift over the page. Dark: a deeper ink and a cooler steel blue. Light: a faint
+     cobalt wash and a paler cream. */
+  --tint-ink: light-dark(oklch(0.93 0.03 260), oklch(0.135 0.045 258));
+  --tint-steel: light-dark(oklch(0.985 0.01 90), oklch(0.24 0.045 235));
+  /* The cracks: darker than the page, with a pale edge. */
+  --crack: oklch(from var(--bg-sunken) calc(l - 0.07) c h);
+  --crack-edge: color-mix(in oklch, var(--text) 10%, transparent);
 }
 
 *,
@@ -22,12 +77,106 @@
 }
 
 body {
-  max-width: 720px;
+  max-width: 1280px;
   margin: 0 auto;
-  padding: 24px 16px 40px;
-  background: var(--bg);
+  padding: 20px clamp(16px, 4vw, 40px) 40px;
+  /* Mottled like worn paint: soft patches, lighter in the top right, darker in the bottom corners.
+     The colored ones drift above it (html::before). */
+  background:
+    radial-gradient(55% 45% at 88% 4%, var(--wash), transparent 70%) fixed,
+    radial-gradient(35% 30% at 20% 35%, color-mix(in oklch, var(--wash) 45%, transparent), transparent 70%) fixed,
+    radial-gradient(45% 40% at 70% 70%, color-mix(in oklch, var(--wash) 35%, transparent), transparent 70%) fixed,
+    radial-gradient(60% 50% at 0% 100%, var(--wash-faint), transparent 70%) fixed,
+    radial-gradient(50% 45% at 100% 100%, var(--wash-faint), transparent 70%) fixed,
+    var(--bg);
   color: var(--text);
   font: 16px/1.6 var(--font);
+}
+
+/* Ink and steel patches, larger than the window, drifting and turning very slowly. Only a
+   transform moves, so the browser doesn't repaint them. Reduced motion stops it. */
+html::before {
+  content: "";
+  position: fixed;
+  inset: -20%;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(32% 36% at 26% 30%, var(--tint-steel), transparent 70%),
+    radial-gradient(30% 34% at 78% 58%, var(--tint-ink), transparent 70%),
+    radial-gradient(24% 22% at 44% 82%, var(--tint-steel), transparent 70%);
+  animation: drift 80s ease-in-out infinite alternate;
+}
+
+@keyframes drift {
+  from {
+    transform: translate3d(-3%, -2%, 0) rotate(-3deg);
+  }
+  to {
+    transform: translate3d(3%, 2%, 0) rotate(3deg);
+  }
+}
+
+/* background.js's canvas: drifting points joined by faint lines, each point slowly changing through
+   these four colors: grey, gold, red and green. Registered as colors, so background.js reads them
+   resolved for the current theme. Fainter in the middle, behind the text, than at the sides. */
+@property --dot-1 {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+@property --dot-2 {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+@property --dot-3 {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+@property --dot-4 {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+.constellation {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  --dot-1: var(--text-muted);
+  --dot-2: var(--warning);
+  --dot-3: var(--danger);
+  --dot-4: var(--success);
+  mask-image: linear-gradient(90deg, black, color-mix(in srgb, black 35%, transparent) 30% 70%, black);
+}
+
+/* Cracks and scratches in the paint (cracks.svg, a mask): each a dark line with a faint light edge
+   a pixel below and right, like a real fracture. Still, so nothing to stop. */
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  mask: url("cracks.svg") center / cover no-repeat;
+}
+
+body::before {
+  background: var(--crack);
+}
+
+body::after {
+  background: var(--crack-edge);
+  mask-position: calc(50% + 1px) calc(50% + 1px);
 }
 
 a {
@@ -41,24 +190,14 @@ button:focus-visible {
   outline-offset: 2px;
 }
 
-/* The header: the name and the links centered, the intro left-aligned between them. */
-header {
-  text-align: center;
-}
-
+/* The 404 page's heading; the home page's (.hero h1) is larger. */
 h1 {
-  margin: 48px 0 16px;
-  font-size: clamp(32px, 7vw, 44px);
+  margin: 96px 0 16px;
+  font-family: var(--display);
+  font-size: clamp(40px, 8vw, 64px);
   font-weight: 700;
-  line-height: 1.15;
-  letter-spacing: -0.025em;
-}
-
-h2 {
-  margin: 56px 0 16px;
-  font-size: 22px;
-  font-weight: 650;
-  letter-spacing: -0.015em;
+  line-height: 1;
+  letter-spacing: -0.035em;
 }
 
 h3 {
@@ -87,16 +226,24 @@ sup {
   line-height: 0;
 }
 
-/* The full width of the column, so it lines up with Projects below. In the main text color: white on dark. */
 .lead {
   color: var(--text);
   font-size: 18px;
-  text-align: left;
 }
 
 .muted {
   color: var(--text-muted);
   font-size: 14px;
+}
+
+/* --- Top bar: the theme button ------------------------------------------------------------- */
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border-muted);
 }
 
 /* --- Theme button: light or dark, showing the theme it switches to ------------------------ */
@@ -106,7 +253,6 @@ sup {
   place-items: center;
   width: 34px;
   height: 32px;
-  margin-left: auto;
   padding: 0;
   border: 1px solid var(--border-muted);
   border-radius: 8px;
@@ -139,14 +285,43 @@ sup {
   display: block;
 }
 
+/* --- Hero: the name, the role, the intro and the links ----------------------------------- */
+
+.hero {
+  padding: clamp(32px, 6vw, 72px) 0 0;
+}
+
+.hero h1 {
+  margin: 0 0 14px;
+  font-size: clamp(48px, 8vw, 96px);
+  font-weight: 700;
+  line-height: 0.95;
+  letter-spacing: -0.035em;
+}
+
+.role {
+  margin: 0 0 28px;
+  color: var(--text);
+  font-size: clamp(20px, 2.4vw, 26px);
+  font-weight: 500;
+  letter-spacing: -0.015em;
+}
+
+.intro {
+  max-width: 58ch;
+  margin: 0;
+  color: var(--text-muted);
+  font-size: clamp(17px, 1.6vw, 19px);
+  line-height: 1.6;
+}
+
 /* --- Links: Bloch Sphere's buttons ---------------------------------------------------------- */
 
 .links {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
   gap: 8px;
-  margin-top: 28px;
+  margin-top: 32px;
 }
 
 /* The four links need 384px for one line, a 416px window with the page's padding; a few pixels more
@@ -157,18 +332,18 @@ sup {
     display: grid;
     grid-template-columns: 1fr 1fr;
     max-width: 300px;
-    margin-inline: auto;
   }
 }
 
 .button {
   padding: 8px 16px;
-  border: 1px solid var(--border-muted);
+  border: 1px solid var(--primary);
   border-radius: 8px;
   background: var(--bg-raised);
-  color: var(--text);
+  color: var(--primary);
   font: inherit;
   font-weight: 500;
+  text-align: center;
   text-decoration: none;
   cursor: pointer;
   transition:
@@ -186,7 +361,6 @@ sup {
 }
 
 .button .note {
-  color: var(--text-muted);
   font-size: 14px;
   font-weight: 400;
 }
@@ -295,7 +469,6 @@ sup {
   height: 18px;
 }
 
-
 .email-card .copy.done {
   border-color: var(--success);
   color: var(--success);
@@ -324,25 +497,100 @@ sup {
   display: block;
 }
 
-/* --- Projects ------------------------------------------------------------------------------- */
+/* --- Projects: one wide row each, the screenshot and the text side by side, alternating ----- */
+
+.projects {
+  margin-top: clamp(56px, 8vw, 96px);
+}
+
+/* "Projects" in small capitals and the accent, followed by a hairline to the edge of the column. */
+.section-label {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 0;
+  color: var(--primary);
+  font: 500 13px/1.4 var(--mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.section-label::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--border-muted);
+}
 
 .project {
+  display: grid;
+  gap: 28px;
+  padding: 36px 0;
+}
+
+.project + .project {
+  border-top: 1px solid var(--border-muted);
+}
+
+.shot {
+  position: relative;
+  display: block;
   overflow: hidden;
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: 10px;
   background: var(--bg-raised);
+  box-shadow: 0 24px 48px -28px var(--shadow);
+  transition: border-color 0.3s;
 }
 
-.project img {
-  display: block;
+.shot img {
   width: 100%;
   height: auto;
-  border-bottom: 1px solid var(--border-muted);
+  vertical-align: top;
+  transition: transform 0.6s ease-out;
 }
 
-/* Screenshots in the page's theme (the projects and the ring's cards): light unless the system is
-   dark (and the visitor didn't pick light) or the visitor picked dark. Lazy loading skips the hidden
-   one. img. in each selector so these win over .project img and .card img. */
+.shot:hover {
+  border-color: var(--highlight);
+}
+
+.shot:hover :is(img, video) {
+  transform: scale(1.015);
+}
+
+/* The clip over the screenshot (clips.js): hidden until it plays, then faded in. Shown at all only in
+   the dark theme (it was recorded in it), with a mouse, and without reduced motion. */
+.shot video {
+  display: none;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition:
+    opacity 0.3s,
+    transform 0.6s ease-out;
+}
+
+.shot.playing video {
+  opacity: 1;
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .shot video {
+      display: block;
+    }
+  }
+
+  :root[data-theme="dark"] .shot video {
+    display: block;
+  }
+}
+
+/* Screenshots in the page's theme: light unless the system is dark (and the visitor didn't pick
+   light) or the visitor picked dark. Lazy loading skips the hidden one. */
 img.only-dark {
   display: none;
 }
@@ -364,202 +612,113 @@ img.only-dark {
   display: block;
 }
 
-.project .body {
-  padding: 20px 20px 8px;
+.project .index {
+  margin: 0 0 12px;
+  color: var(--text-muted);
+  font: 12px/1 var(--mono);
+  letter-spacing: 0.08em;
 }
 
-.projects {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+.project h3 {
+  margin: 0 0 10px;
+  line-height: 1.1;
 }
 
-/* --- Projects as a 3D ring (projects.js; without it, the list above) ------------------------ */
-
-.carousel {
-  --card-w: min(340px, 64vw);
-  --card-title: 46px;
+/* As in Bloch Sphere's top bar: written "Bloch Sphere" in the HTML and capitalized here, so screen
+   readers don't spell it out. Michroma is wide, so smaller than rekt's. */
+.project .title-bloch {
+  font: 400 clamp(22px, 2.4vw, 28px) / 1.15 Michroma, var(--font);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
-/* Wider than the column by its padding, so the side cards have room. */
-.stage {
-  position: relative;
-  height: calc(var(--card-w) * 9 / 16 + var(--card-title) + 72px);
-  margin: 0 -16px;
-  overflow: hidden;
-  perspective: 1100px;
-  /* Vertical swipes still scroll the page; sideways ones turn the ring. */
-  touch-action: pan-y;
-  cursor: grab;
-  user-select: none;
-  -webkit-user-select: none;
+/* As in rekt's logo: Bungee, with the dot in rekt's --down red. */
+.project .title-rekt {
+  font: 400 clamp(32px, 3.6vw, 42px) / 1 Bungee, var(--font);
+  letter-spacing: 0.02em;
 }
 
-.stage:active {
-  cursor: grabbing;
+.title-rekt span {
+  color: var(--danger);
 }
 
-.ring {
-  position: absolute;
-  top: 24px;
-  left: 50%;
-  width: var(--card-w);
-  margin-left: calc(var(--card-w) / -2);
-  transform-style: preserve-3d;
-}
-
-.card {
-  position: absolute;
-  top: 0;
-  left: 0;
-  display: block;
-  width: var(--card-w);
-  overflow: hidden;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  background: var(--bg-raised);
+.tagline {
+  margin: 0 0 18px;
   color: var(--text);
-  text-decoration: none;
-  box-shadow: 0 12px 32px var(--shadow);
-  /* The cards behind the ring don't show through it, mirrored. */
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-}
-
-.card.front {
-  border-color: var(--highlight);
-}
-
-/* Shown or hidden by img.only-light/only-dark above, so no display here; top-aligned, so no gap under it. */
-.card img {
-  width: 100%;
-  height: auto;
-  aspect-ratio: 16 / 9;
-  vertical-align: top;
-  border-bottom: 1px solid var(--border-muted);
-  pointer-events: none;
-}
-
-.card-title {
-  display: flex;
-  align-items: center;
-  height: var(--card-title);
-  padding: 0 16px;
-  font-size: 17px;
-  font-weight: 650;
+  font-size: clamp(18px, 1.8vw, 21px);
+  font-weight: 500;
+  line-height: 1.35;
   letter-spacing: -0.01em;
 }
 
-.controls {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  margin: 0 0 20px;
-}
-
-.button.arrow {
-  display: grid;
-  place-items: center;
-  width: 36px;
-  height: 36px;
-  padding: 0 0 2px;
-  font-size: 22px;
-  line-height: 1;
-}
-
-/* The pause button: a little apart from the arrows, showing what a press does. */
-.button.pause {
-  margin-left: 8px;
+.project .body > p:not([class]) {
   color: var(--text-muted);
 }
 
-.button.pause:hover {
-  color: var(--text);
+.stack {
+  margin: 20px 0 24px;
+  color: var(--text-muted);
+  font: 12.5px/1.5 var(--mono);
+  letter-spacing: 0.02em;
 }
 
-.button.pause svg {
-  width: 16px;
-  height: 16px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2.5;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.button.pause .icon-play {
-  display: none;
-}
-
-.button.pause.paused .icon-play {
-  display: block;
-  fill: currentColor;
-}
-
-.button.pause.paused .icon-pause {
-  display: none;
-}
-
-.dots {
+.actions {
   display: flex;
-  gap: 2px;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 20px;
+  margin: 0;
+  font-size: 15px;
 }
 
-/* A 24px target around a 10px dot. */
-.dot {
-  display: grid;
-  place-items: center;
-  width: 24px;
-  height: 24px;
-  padding: 0;
-  border: 0;
-  border-radius: 50%;
-  background: transparent;
-  cursor: pointer;
+@media (min-width: 900px) {
+  .project {
+    grid-template-columns: 7fr 5fr;
+    align-items: center;
+    gap: 56px;
+    padding: 48px 0;
+  }
+
+  /* Every second project: the text on the left, the screenshot on the right. */
+  .project:nth-of-type(even) {
+    grid-template-columns: 5fr 7fr;
+  }
+
+  .project:nth-of-type(even) .shot {
+    order: 2;
+  }
 }
 
-.dot::after {
-  content: "";
-  width: 10px;
-  height: 10px;
-  border: 1px solid var(--highlight);
-  border-radius: 50%;
+/* Each project fades and rises in as it scrolls into view, done by the time it's 40% in. Tied to the
+   scroll, not a timer, so it never moves on its own. Browsers without scroll-driven animations just
+   show it. */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .project {
+      animation: rise linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 40%;
+    }
+  }
 }
 
-.dot[aria-current="true"]::after {
-  border-color: var(--primary);
-  background: var(--primary);
-}
-
-/* The front project's article, under the ring: its screenshot is on the ring already. */
-.detail .project > a {
-  display: none;
-}
-
-/* Stacked in one grid cell, so the spot is as tall as the longest; the front one fades in. Hidden
-   ones are invisible to screen readers and the keyboard too. */
-.detail {
-  display: grid;
-}
-
-.detail .project {
-  grid-area: 1 / 1;
-  transition: opacity 0.35s ease-out;
-}
-
-.detail .project.inactive {
-  visibility: hidden;
-  opacity: 0;
-  transition:
-    opacity 0.2s,
-    visibility 0s 0.2s;
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(32px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 /* --- Footer --------------------------------------------------------------------------------- */
 
 footer {
-  margin-top: 56px;
+  margin-top: 32px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-muted);
   font-size: 13px;
 }
 
@@ -572,5 +731,9 @@ footer p {
   *::before,
   *::after {
     transition: none !important;
+  }
+
+  html::before {
+    animation: none;
   }
 }

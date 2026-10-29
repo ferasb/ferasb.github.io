@@ -1,0 +1,29 @@
+<!-- The background's cracks and scratches: a mask only (style.css's body::before and ::after), so
+     only the alpha counts and the colors come from the page's tokens. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid slice">
+  <g fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Cracks: jagged, branching, thinning toward their ends. -->
+    <g stroke-width="1.6">
+      <path d="M1240 0L1228 38L1236 61L1214 98L1219 131L1196 170L1204 196L1181 242L1188 270L1160 318L1166 352L1141 401" />
+      <path d="M1600 520L1561 531L1537 552L1498 556L1471 581L1430 589L1409 616" />
+      <path d="M0 690L34 676L58 692L95 681L118 702L156 698L180 724" />
+      <path d="M520 1000L533 968L526 941L548 908L543 884L566 851" />
+    </g>
+    <g stroke-width="1">
+      <path d="M1196 170L1232 205L1240 236L1268 262L1281 297" />
+      <path d="M1160 318L1124 336L1102 372L1071 386" />
+      <path d="M1141 401L1150 433L1131 462" />
+      <path d="M1498 556L1489 520L1460 498L1452 471" />
+      <path d="M1409 616L1384 640L1376 671" />
+      <path d="M95 681L104 646L131 628" />
+      <path d="M180 724L214 731L231 760" />
+      <path d="M548 908L579 902L601 884" />
+    </g>
+    <!-- Scratches: short, thin, roughly parallel, as if something was dragged across. -->
+    <g stroke-width="0.8" stroke-opacity="0.7">
+      <path d="M170 110L262 158M182 128L251 164M160 131L236 172M196 104L280 150" />
+      <path d="M1290 800L1392 846M1302 822L1381 857M1276 819L1350 853" />
+      <path d="M760 70L812 62M772 84L838 74" />
+    </g>
+  </g>
+</svg>
